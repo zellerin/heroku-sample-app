@@ -1,5 +1,6 @@
 (load "quicklisp/setup")
 (asdf:disable-output-translations)
+(push :hunchentoot-no-ssl *features*)
 (ql:quickload 'hunchentoot)
 (hunchentoot:start
  (make-instance 'hunchentoot:easy-acceptor
