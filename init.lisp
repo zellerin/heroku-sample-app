@@ -10,38 +10,9 @@
 		:document-root (merge-pathnames "./www/" *load-truename*)))
 
 
-(hunchentoot:define-easy-handler (test :uri "/") ()
-  (with-output-to-string (s)
-    (cl-who:with-html-output (s)
-      (:h1 "It works"))))
+(setq tbnl:*show-lisp-errors-p* (sb-posix:getenv "SHOW-ERRORS"))
 
-(defun parse-connection-string (&optional (string (sb-posix:getenv "DATABASE_URL")))
-  (cond ((null string)
-	 '("zellerin" "zellerin" nil :unix))
-	(t
-	 (let* ((user-start (mismatch "postgres://" string))
-		(passwd-start (position #\: string :start user-start))
-		(url-start (position #\@ string :start passwd-start))
-		(port-start (position #\: string :start url-start))
-		(application (position #\/ string :start port-start)))
-	   (list
-	    (subseq string (1+ application))
-	    (subseq string user-start passwd-start)
-	    (subseq string (1+ passwd-start) url-start)
-	    (subseq string (1+ url-start) port-start)
-	    :port (parse-integer (subseq string (1+ port-start) application)))))))
-
-(hunchentoot:define-easy-handler (test :uri "/pgtest") ()
-  (with-output-to-string (s)
-    (cl-who:with-html-output (s)
-      (:h1 "PG test")
-      (format s "<p>~s</p>"
-	      (postmodern:with-connection (parse-connection-string)
-		(postmodern:QUERY (:select 22 4.5 "HI")))))))
-
-(setq tbnl:*show-lisp-errors-p* t)
-(print (parse-connection-string))
-(finish-output)
+(load "app")
 (handler-case
   (loop
     (sleep 1000))
