@@ -1,5 +1,1 @@
-(require 'asdf)
-(asdf::disable-output-translations)
-(require-quicklisp)
-(push :hunchentoot-no-ssl *features*)
-(ql:quickload 'hunchentoot)
+
